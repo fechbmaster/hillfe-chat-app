@@ -2,15 +2,16 @@
  * Created by Barni on 07.07.2017.
  */
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {ChatService} from "../services/chat.service";
+import {SocketService} from "../services/socket.service";
 import {Subscription} from "rxjs";
 import {AuthenticationService} from "../services/authentication.service";
+import {SocketEvents} from "../models/socketEvents";
 
 @Component( {
   selector: "chat-component",
   templateUrl: "./chat.component.html",
   styleUrls: ['./chat.component.css'],
-  providers: [ChatService]
+  providers: [SocketService]
 })
 export class ChatComponent implements OnInit, OnDestroy {
 
@@ -18,12 +19,12 @@ export class ChatComponent implements OnInit, OnDestroy {
   private connection: Subscription;
   public message: string;
 
-  constructor(private chatService: ChatService, private authService: AuthenticationService) {}
+  constructor(private chatService: SocketService, private authService: AuthenticationService) {}
 
   private sendMessage(): void {
     // Send only when message is there
     if (this.message) {
-      this.chatService.sendMessage(this.message);
+      this.chatService.emit(SocketEvents.MESSAGE, this.message);
       this.message = '';
     }
   }
@@ -34,9 +35,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authService.checkCredentials();
-    this.connection = this.chatService.getMessages().subscribe(message => {
+    this.connection = this.chatService.getResponse(SocketEvents.MESSAGE).subscribe(message => {
       this.messages.push(message);
-      console.log(this.messages);
     })
   }
 

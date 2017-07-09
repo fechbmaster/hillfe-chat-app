@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "nodemon --exec ts-node ./src/server/main.ts | nodemon --exec ng serve",
+    "start": "nodemon --exec ts-node ./src/server/main.ts",
     "build": "ng build"
   },
   "private": true,
