@@ -24,6 +24,7 @@ export class AuthenticationService {
     return new Promise((resolve, reject) => {
       this.socketService.getResponse(SocketEvents.LOGIN)
         .subscribe((data) => {
+            localStorage.setItem('current user', JSON.stringify(user));
             resolve(data);
           },
           err => {
