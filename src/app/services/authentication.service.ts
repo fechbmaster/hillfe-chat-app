@@ -24,7 +24,7 @@ export class AuthenticationService {
     return new Promise((resolve, reject) => {
       this.socketService.getResponse(SocketEvents.LOGIN)
         .subscribe((data) => {
-            localStorage.setItem('current user', JSON.stringify(user));
+            localStorage.setItem('currentUser', JSON.stringify(user));
             resolve(data);
           },
           err => {
@@ -41,6 +41,7 @@ export class AuthenticationService {
   }
 
   public checkCredentials(): void{
+    console.log("Current user: " + localStorage.getItem("currentUser"));
     if (localStorage.getItem("currentUser") === null){
       this.router.navigate(["/login-page"]);
     }
