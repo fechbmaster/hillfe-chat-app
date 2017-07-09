@@ -3,13 +3,13 @@
  */
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
-import * as io from 'socket.io/node_modules/socket.io-client';
+import * as io from 'socket.io-client';
 import {SocketEvents} from "../models/socketEvents";
 
 @Injectable()
 export class SocketService {
     private url = "http://localhost:4500";
-    private socket: io;
+    private socket;
 
     constructor() {
       this.socket = io(this.url);

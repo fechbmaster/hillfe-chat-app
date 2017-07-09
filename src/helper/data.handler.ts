@@ -13,10 +13,10 @@ export class DataHandler {
   }
 
   public getAllUsers(): User[] {
-    return require('./user.json');
+    return JSON.parse(require('./user.json'));
   }
 
   public getUser(user: User) {
-    this.getAllUsers()
+
   }
 }
