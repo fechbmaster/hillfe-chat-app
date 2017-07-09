@@ -14,42 +14,24 @@ import {SocketEvents} from "app/models/socketEvents";
 @Injectable()
 export class AuthenticationService {
 
-  constructor(private router: Router, private http: Http, private socketService: SocketService) {
+  constructor(private router: Router, private socketService: SocketService) {
   }
 
-  public login(user: User): boolean {
+  public login(user: User): Promise<any> {
     // Emit login to server
     this.socketService.emit(SocketEvents.LOGIN, user);
     // Wait for response
-    this.socketService.getResponse(SocketEvents.LOGIN)
-      .subscribe((data) => {
-        if (data === true) {
-          localStorage.setItem("currentUser", JSON.stringify(user));
-          return true;
-        }
-        else
-          return false;
-    },
-      err => {
-        console.log("Failed to get a resonse from server at login. \n Error: " + err.message);
-        return false;
-      }
-  );
-    return false;
+    return new Promise((resolve, reject) => {
+      this.socketService.getResponse(SocketEvents.LOGIN)
+        .subscribe((data) => {
+            resolve(data);
+          },
+          err => {
+            console.error("Failed to get a resonse from server at login. \n Error: " + err.message);
+            reject(err);
+          }
+        )});
   }
-
-  /**
-  public login(user:User): boolean {
-    var authenticatedUser = users.find(u => u.username === user.username);
-    if (authenticatedUser && authenticatedUser.password === user.password){
-      localStorage.setItem("currentUser", JSON.stringify(authenticatedUser));
-      this.router.navigate(["/chat"]);
-      return true;
-    }
-    return false;
-  }
-   **/
-
 
   public logout(): void {
     // clear ser from local storage to log user out
@@ -58,7 +40,6 @@ export class AuthenticationService {
   }
 
   public checkCredentials(): void{
-    console.log(localStorage.getItem("currentUser"));
     if (localStorage.getItem("currentUser") === null){
       this.router.navigate(["/login-page"]);
     }
