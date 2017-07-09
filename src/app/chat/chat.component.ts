@@ -6,6 +6,7 @@ import {SocketService} from "../services/socket.service";
 import {Subscription} from "rxjs";
 import {AuthenticationService} from "../services/authentication.service";
 import {SocketEvents} from "../models/socketEvents";
+import {Message} from "../models/message";
 
 @Component( {
   selector: "chat-component",
@@ -15,16 +16,19 @@ import {SocketEvents} from "../models/socketEvents";
 })
 export class ChatComponent implements OnInit, OnDestroy {
 
-  public messages : string[] = [];
+  public messages: Message[] = [];
   private connection: Subscription;
   public message: string;
+  public placeholderUrl = "../../assets/Person-placeholder.jpg";
+  public timeStamp: string;
 
   constructor(private chatService: SocketService, private authService: AuthenticationService) {}
 
   private sendMessage(): void {
-    // Send only when message is there
+    // Send only when message is typed
     if (this.message) {
-      this.chatService.emit(SocketEvents.MESSAGE, this.message);
+      let msg: Message = new Message(this.message, this.authService.getCurrentUser().username);
+      this.chatService.emit(SocketEvents.MESSAGE, msg);
       this.message = '';
     }
   }
@@ -33,10 +37,21 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.authService.logout();
   }
 
+  private static getTimeStamp(): string {
+    let d = new Date();
+    return d.getHours()+":"+d.getMinutes();
+  }
+
   ngOnInit(): void {
     this.authService.checkCredentials();
     this.connection = this.chatService.getResponse(SocketEvents.MESSAGE).subscribe(message => {
-      this.messages.push(message);
+      this.timeStamp = ChatComponent.getTimeStamp();
+      let msg: Message = message;
+      if (msg.username === this.authService.getCurrentUser().username) {
+        console.log(msg.username + this.authService.getCurrentUser().username);
+        msg.own = true;
+      }
+      this.messages.push(msg);
     })
   }
 

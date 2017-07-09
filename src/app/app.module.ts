@@ -11,9 +11,9 @@ import {RouterModule, Routes} from "@angular/router";
 import {HttpModule} from "@angular/http";
 
 const appRoutes: Routes = [
-  {path: '', redirectTo: '/chat', pathMatch: 'full' },
-  {path: 'login-page', component: LoginComponent},
-  {path: 'chat', component: ChatComponent},
+  {path: "", redirectTo: "chat", pathMatch: "full" },
+  {path: "login-page", component: LoginComponent},
+  {path: "chat", component: ChatComponent},
 ];
 
 @NgModule({
@@ -25,7 +25,7 @@ const appRoutes: Routes = [
   imports: [
     RouterModule.forRoot(
       appRoutes,
-      {enableTracing: true} // <--- debugging purposes only
+      {useHash: true, enableTracing: true}, // <--- debugging purposes only
     ),
     BrowserModule,
     FormsModule,

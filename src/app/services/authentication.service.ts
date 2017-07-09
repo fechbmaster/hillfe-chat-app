@@ -34,6 +34,11 @@ export class AuthenticationService {
         )});
   }
 
+  public getCurrentUser(): User {
+    this.checkCredentials();
+    return JSON.parse(localStorage.getItem("currentUser"));
+  }
+
   public logout(): void {
     // clear ser from local storage to log user out
     localStorage.removeItem('currentUser');
