@@ -37,13 +37,13 @@ export class AuthenticationService {
   public logout(): void {
     // clear ser from local storage to log user out
     localStorage.removeItem('currentUser');
-    this.router.navigate(["/login-page"]);
+    this.router.navigate(["login-page"]).then();
   }
 
   public checkCredentials(): void{
     console.log("Current user: " + localStorage.getItem("currentUser"));
     if (localStorage.getItem("currentUser") === null){
-      this.router.navigate(["/login-page"]);
+      this.router.navigate(["login-page"]).then();
     }
   }
 }

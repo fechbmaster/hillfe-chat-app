@@ -3,27 +3,25 @@
  */
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
-import * as io from 'socket.io-client';
 import {SocketEvents} from "../models/socketEvents";
+import {ClientSocket} from "../socket/client.socket";
 
 @Injectable()
 export class SocketService {
-    private url = "http://localhost:4500";
-    private socket;
 
     constructor() {
-      this.socket = io(this.url);
+      ClientSocket.getInstance();
     }
 
     // No need to make this a promise
     public emit(event: SocketEvents, content: any): void {
-      const promise = this.socket.emit(event, content);
+      const promise = ClientSocket.socket.emit(event, content);
       console.log("Emited event '%s' with content '%s'.", event, JSON.stringify(content));
     }
 
     public getResponse(event: SocketEvents): Observable<any> {
         let observable = new Observable(observer => {
-        this.socket.on(event, (data) => {
+        ClientSocket.socket.on(event, (data) => {
           observer.next(data);
         },
         err => console.error(err.messsage)

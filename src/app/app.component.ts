@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import {Server} from "../server/server";
-import {LoginComponent} from "./login/login.component";
 
 @Component({
   selector: 'hillfe-chat-app',
