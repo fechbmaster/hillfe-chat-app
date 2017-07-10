@@ -47,8 +47,8 @@ export class Server {
       });
       // Send to all
       socket.on(SocketEvents.MESSAGE, (msg) => {
-        console.log('Server emitted: ' + msg);
-        this.io.emit(SocketEvents.MESSAGE, JSON.stringify(msg));
+        console.log('Server emitted: ' + JSON.stringify(msg));
+        this.io.emit(SocketEvents.MESSAGE, msg);
       });
     });
 
