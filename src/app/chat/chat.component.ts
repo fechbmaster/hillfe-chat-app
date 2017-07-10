@@ -48,7 +48,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.timeStamp = ChatComponent.getTimeStamp();
       let msg: Message = message;
       if (msg.username === this.authService.getCurrentUser().username) {
-        console.log(msg.username + this.authService.getCurrentUser().username);
         msg.own = true;
       }
       this.messages.push(msg);

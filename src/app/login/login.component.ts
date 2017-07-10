@@ -21,6 +21,7 @@ export class LoginComponent {
   private login() {
     this.authService.login(this.user).then((res) => {
         if (res == true) {
+          localStorage.setItem('currentUser', JSON.stringify(this.user));
           console.log("User successfully loged in.");
           // Wait for promise fulfillment
           this.router.navigate(["/chat"]).then();
