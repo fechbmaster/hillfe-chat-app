@@ -14,7 +14,7 @@ export class SocketService {
     }
 
     // No need to make this a promise
-    public emit(event: SocketEvents, content: any): void {
+    public emit(event: SocketEvents, content?: any): void {
       ClientSocket.socket.emit(event, content);
       console.log("Emited event '%s' with content '%s'.", event, JSON.stringify(content));
     }

@@ -9,6 +9,9 @@ import {LoginComponent} from "./login/login.component";
 import {AuthenticationService} from "./services/authentication.service";
 import {RouterModule, Routes} from "@angular/router";
 import {HttpModule} from "@angular/http";
+import {RoomComponent} from "./room/room.component";
+import {RoomService} from "./services/room.service";
+import {DataHandler} from "../server/data.handler";
 
 const appRoutes: Routes = [
   {path: "", redirectTo: "chat", pathMatch: "full" },
@@ -20,18 +23,19 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     LoginComponent,
+    RoomComponent,
     ChatComponent
   ],
   imports: [
     RouterModule.forRoot(
       appRoutes,
-      {useHash: true, enableTracing: true}, // <--- debugging purposes only
+      {useHash: true, enableTracing: false}, // <--- debugging purposes only
     ),
     BrowserModule,
     FormsModule,
     HttpModule
   ],
-  providers: [SocketService, AuthenticationService],
+  providers: [SocketService, AuthenticationService, RoomService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

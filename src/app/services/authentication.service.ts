@@ -45,7 +45,6 @@ export class AuthenticationService {
   }
 
   public checkCredentials(): void{
-    console.log("Current user: " + localStorage.getItem("currentUser"));
     if (localStorage.getItem("currentUser") === null){
       this.router.navigate(["login-page"]).then();
     }

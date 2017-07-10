@@ -1,0 +1,37 @@
+<div class="col-sm-3 chat_sidebar">
+  <div class="row">
+    <div class="dropdown all_rooms">
+      <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-weixin" aria-hidden="true"></i>
+          {{currentRoom.roomname}}
+        <span class="caret pull-right"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        <li><a *ngFor="let room of rooms" (click)="changeRoom(room)" href="#"> {{room.roomname}} </a></li>
+      </ul>
+    </div>
+    <div class="member_list">
+      <ul class="list-unstyled">
+        <li class="left clearfix" *ngFor="let user of currentRoom.usernames">
+                     <span class="chat-img pull-left">
+                     <img src="{{placeholderUrl}}" alt="User Avatar" class="img-circle">
+                     </span>
+          <div class="chat-body clearfix">
+            <div class="header_sec">
+              <strong class="primary-font">{{user}}</strong>
+            </div>
+          </div>
+        </li>
+        <li class="left clearfix">
+                     <span class="chat-img pull-left">
+                     <img src="{{placeholderUrl}}" alt="User Avatar" class="img-circle">
+                     </span>
+          <div class="chat-body clearfix">
+            <div class="header_sec">
+              <strong class="primary-font">dummy</strong>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div></div>
+</div>

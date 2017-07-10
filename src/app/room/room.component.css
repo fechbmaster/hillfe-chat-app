@@ -1,0 +1,79 @@
+.all_rooms button {
+  background: #f5f3f3 none repeat scroll 0 0;
+  border: 1px solid #dddddd;
+  height: 38px;
+  text-align: left;
+  width: 100%;
+}
+.all_rooms i {
+  background: #e9e7e8 none repeat scroll 0 0;
+  border-radius: 100px;
+  color: #636363;
+  font-size: 17px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  width: 30px;
+}
+.all_rooms .caret {
+  bottom: 0;
+  margin: auto;
+  position: absolute;
+  right: 15px;
+  top: 0;
+}
+.all_rooms .dropdown-menu {
+  background: #f5f3f3 none repeat scroll 0 0;
+  border-radius: 0;
+  margin-top: 0;
+  padding: 0;
+  width: 100%;
+}
+.all_rooms ul li {
+  border-bottom: 1px solid #dddddd;
+  line-height: normal;
+  width: 100%;
+}
+.all_rooms ul li a:hover {
+  background: #dddddd none repeat scroll 0 0;
+  color:#333;
+}
+.all_rooms ul li a {
+  color: #333;
+  line-height: 30px;
+  padding: 3px 20px;
+}
+.member_list .chat-body {
+  margin-left: 47px;
+  margin-top: 0;
+}
+.top_nav {
+  overflow: visible;
+}
+.member_list li {
+  padding: 6px;
+}
+.member_list ul {
+  border: 1px solid #dddddd;
+}
+.chat-img img {
+  height: 34px;
+  width: 34px;
+}
+.member_list li {
+  border-bottom: 1px solid #dddddd;
+  padding: 6px;
+}
+.member_list li:last-child {
+  border-bottom:none;
+}
+.member_list {
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.member_list li:hover {
+  background: #428bca none repeat scroll 0 0;
+  color: #fff;
+  cursor:pointer;
+}
