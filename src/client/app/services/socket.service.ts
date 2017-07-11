@@ -22,6 +22,7 @@ export class SocketService {
     public getResponse(event: SocketEvents): Observable<any> {
         let observable = new Observable(observer => {
         ClientSocket.socket.on(event, (data) => {
+          console.log("Received event '%s' with content '%s'", event, JSON.stringify(data));
           observer.next(data);
         },
         err => console.error(err.messsage)

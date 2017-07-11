@@ -1,15 +1,13 @@
-///<reference path="../../../node_modules/rxjs/add/operator/map.d.ts"/>
+///<reference path="../../../../node_modules/rxjs/add/operator/map.d.ts"/>
 /**
  * Created by Barni on 07.07.2017.
  */
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import {Observable, Subscription} from 'rxjs';
 import 'rxjs/add/operator/map'
 import {Router} from "@angular/router";
 import {User} from "../models/user";
 import {SocketService} from "./socket.service";
-import {SocketEvents} from "app/models/socketEvents";
+import {SocketEvents} from "../models/socketEvents";
 
 @Injectable()
 export class AuthenticationService {

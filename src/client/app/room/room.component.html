@@ -12,23 +12,13 @@
     </div>
     <div class="member_list">
       <ul class="list-unstyled">
-        <li class="left clearfix" *ngFor="let user of currentRoom.usernames">
+        <li class="left clearfix" *ngFor="let user of users">
                      <span class="chat-img pull-left">
                      <img src="{{placeholderUrl}}" alt="User Avatar" class="img-circle">
                      </span>
           <div class="chat-body clearfix">
             <div class="header_sec">
               <strong class="primary-font">{{user}}</strong>
-            </div>
-          </div>
-        </li>
-        <li class="left clearfix">
-                     <span class="chat-img pull-left">
-                     <img src="{{placeholderUrl}}" alt="User Avatar" class="img-circle">
-                     </span>
-          <div class="chat-body clearfix">
-            <div class="header_sec">
-              <strong class="primary-font">dummy</strong>
             </div>
           </div>
         </li>

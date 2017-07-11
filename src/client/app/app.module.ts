@@ -11,7 +11,6 @@ import {RouterModule, Routes} from "@angular/router";
 import {HttpModule} from "@angular/http";
 import {RoomComponent} from "./room/room.component";
 import {RoomService} from "./services/room.service";
-import {DataHandler} from "../server/data.handler";
 
 const appRoutes: Routes = [
   {path: "", redirectTo: "chat", pathMatch: "full" },
@@ -23,8 +22,8 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     LoginComponent,
-    RoomComponent,
-    ChatComponent
+    ChatComponent,
+    RoomComponent
   ],
   imports: [
     RouterModule.forRoot(

@@ -1,7 +1,7 @@
 /**
  * Created by Barni on 09.07.2017.
  */
-import {User} from "../app/models/user";
+import {User} from "../client/app/models/user";
 import * as fs from "fs";
 import {Room} from "./room";
 
@@ -13,7 +13,7 @@ export class DataHandler {
   }
 
   private loadUsers(): User[] {
-    return require('./../../user.json');
+    return require('./user.json');
   }
 
   public checkForUser(user: User): boolean {
@@ -26,11 +26,11 @@ export class DataHandler {
   }
 
   public loadRooms(): Room[] {
-    return require('./../../rooms.json');
+    return require('./rooms.json');
   }
 
   public saveRooms(rooms: Room[]) {
-    fs.writeFile('./rooms.json', JSON.stringify(rooms));
+    fs.writeFile('./src/server/rooms.json', JSON.stringify(rooms));
   }
 
 }

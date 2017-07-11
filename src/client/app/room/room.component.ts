@@ -6,30 +6,28 @@ import {Room} from "../models/room";
 import {RoomService} from "../services/room.service";
 import {AuthenticationService} from "../services/authentication.service";
 import {SocketService} from "../services/socket.service";
-import {DataHandler} from "../../server/data.handler";
 import {SocketEvents} from "../models/socketEvents";
 
 @Component( {
   selector: "room-component",
   templateUrl: "./room.component.html",
   styleUrls: ['./room.component.css'],
-  providers: [RoomService, AuthenticationService, SocketService, DataHandler]
+  providers: [RoomService, AuthenticationService]
 })
 export class RoomComponent implements OnInit {
   public currentRoom: Room = new Room("loading...");
   public rooms: Room[] = [];
+  public users: string[] = [];
   public placeholderUrl = "../../assets/Person-placeholder.jpg";
 
   constructor(private roomService: RoomService, private authService: AuthenticationService, private socketService: SocketService){}
 
   public changeRoom(room: Room) {
-    if (room === this.currentRoom)
-      return;
-    this.roomService.joinRoom(this.authService.getCurrentUser(), room).then((res) => {
+    this.roomService.joinRoom(this.authService.getCurrentUser(), this.currentRoom, room).then((res) => {
       if (res) {
         console.log("Changed room to: "+ room.roomname);
-        this.currentRoom = room;
-        this.rooms = res;
+        this.currentRoom = res;
+        this.users = this.currentRoom.usernames;
       }
       else
         console.log("Can't change user to new room!")
@@ -43,7 +41,7 @@ export class RoomComponent implements OnInit {
       this.changeRoom(this.rooms[0]);
     });
     this.socketService.getResponse(SocketEvents.ROOMCHANGED).subscribe(res => {
-      this.rooms = res;
+      this.users = res.usernames;
     })
   }
 

@@ -3,7 +3,6 @@
  */
 import {Injectable} from "@angular/core";
 import {Room} from "../models/room";
-import {DataHandler} from "../../server/data.handler";
 import {User} from "../models/user";
 import {SocketService} from "./socket.service";
 import {SocketEvents} from "../models/socketEvents";
@@ -28,8 +27,8 @@ export class RoomService {
         )});
   }
 
-  public joinRoom(user: User, room: Room): Promise<any> {
-    this.socketService.emit(SocketEvents.JOINROOM, new JoinRoomRequest(user.username, room));
+  public joinRoom(user: User, oldRoom: Room, newRoom: Room): Promise<any> {
+    this.socketService.emit(SocketEvents.JOINROOM, new JoinRoomRequest(user.username, oldRoom, newRoom));
     // Wait until response came from server
     return new Promise((resolve, reject) => {
       this.socketService.getResponse(SocketEvents.JOINROOM)

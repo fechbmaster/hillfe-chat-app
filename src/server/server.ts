@@ -1,10 +1,10 @@
 import * as express from "express";
 import * as http from "http";
 import * as socketIo from "socket.io";
-import {SocketEvents} from "../app/models/socketEvents";
+import {SocketEvents} from "../client/app/models/socketEvents";
 import {DataHandler} from "./data.handler";
 import {Room} from "./room";
-import {JoinRoomRequest} from "../app/models/joinRoomRequest";
+import {JoinRoomRequest} from "../client/app/models/joinRoomRequest";
 /**
  * Created by Barni on 04.07.2017.
  */
@@ -34,21 +34,36 @@ export class Server {
   }
 
   private removeUser(username: string): void {
-    for (let room of this.rooms) {
-      room.usernames.splice(room.usernames.indexOf(username), 1);
+    let rooms = this.rooms;
+    for (let room of rooms) {
+      for (let i = 0; i < room.usernames.length; i++) {
+        if (room.usernames[i]===username) {
+          room.usernames.splice(i, 1);
+        }
+      }
     }
+    this.rooms = rooms;
+  }
+
+  private getRoom(room: Room): Room {
+    for (let orgroom of this.rooms) {
+      if (orgroom.roomname===room.roomname)
+        return orgroom;
+    }
+    return room;
   }
 
   // General-room can't be deleted! Only users can be synced...
-  private addUserToRoom(request: JoinRoomRequest): boolean {
+  private addUserToRoom(request: JoinRoomRequest): Room {
     this.removeUser(request.username);
     for (let i = 0;  i < this.rooms.length; i++) {
-      if (this.rooms[i].roomname === request.room.roomname) {
+      if (this.rooms[i].roomname === request.newRoom.roomname) {
         this.rooms[i].usernames.push(request.username);
-        return true;
+        console.log(this.rooms);
+        return this.rooms[i];
       }
     }
-    return false;
+    return null;
   }
 
   public init() {
@@ -60,7 +75,7 @@ export class Server {
       console.log("User connected with id: "+ socket.id);
 
       socket.on('disconnect', () => {
-        console.log('User disconnected');
+        console.log('Guest-user disconnected');
       });
 
       // Send only to id when rooms are requested
@@ -71,13 +86,26 @@ export class Server {
       // Send to room when join to room occurs
       socket.on(SocketEvents.JOINROOM, (msg) => {
         let request: JoinRoomRequest = msg;
-        let added: boolean =  this.addUserToRoom(request);
-        if (added) {
+        let room: Room =  this.addUserToRoom(request);
+        if (room) {
           // make "db" save
           this.dataHandler.saveRooms(this.rooms);
-          this.io.to(socket.id).emit(SocketEvents.JOINROOM, this.rooms);
-          socket.join(request.room.roomname);
-          this.io.to(request.room.roomname).emit(SocketEvents.ROOMCHANGED, this.rooms);
+          this.io.to(socket.id).emit(SocketEvents.JOINROOM, room);
+          socket.join(request.newRoom.roomname);
+          // Emmit for old room
+          this.io.to(request.oldRoom.roomname).emit(SocketEvents.ROOMCHANGED, this.getRoom(request.oldRoom));
+          // Emmit for new room
+          this.io.to(request.newRoom.roomname).emit(SocketEvents.ROOMCHANGED, this.getRoom(request.newRoom));
+          // Send to room
+          socket.on(SocketEvents.MESSAGE, (msg) => {
+            console.log('Server emitted: ' + JSON.stringify(msg));
+            this.io.to(request.newRoom.roomname).emit(SocketEvents.MESSAGE, msg);
+          });
+          socket.on('disconnect', () => {
+            console.log('Registered-user disconnected');
+            // Emmit for new room
+            this.io.to(request.newRoom.roomname).emit(SocketEvents.ROOMCHANGED, this.getRoom(request.newRoom));
+          });
         }
       });
 
@@ -85,12 +113,6 @@ export class Server {
       socket.on(SocketEvents.LOGIN, (msg) => {
         console.log("Server emitted login for user: " + JSON.stringify(msg));
         this.io.to(socket.id).emit(SocketEvents.LOGIN, this.dataHandler.checkForUser(msg));
-      });
-
-      // Send to all
-      socket.on(SocketEvents.MESSAGE, (msg) => {
-        console.log('Server emitted: ' + JSON.stringify(msg));
-        this.io.emit(SocketEvents.MESSAGE, msg);
       });
     });
 

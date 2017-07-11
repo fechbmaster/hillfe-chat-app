@@ -5,7 +5,7 @@
   },
   "apps": [
     {
-      "root": "src/app",
+      "root": "src/client",
       "outDir": "dist",
       "assets": [
         "assets",
@@ -18,10 +18,10 @@
       "prefix": "app",
       "styles": [
         "styles.css",
-        "../node_modules/bootstrap/dist/css/bootstrap.min.css"
+        "../../node_modules/bootstrap/dist/css/bootstrap.min.css"
       ],
       "scripts": [
-        "../node_modules/bootstrap/dist/js/bootstrap.js"
+        "../../node_modules/bootstrap/dist/js/bootstrap.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
