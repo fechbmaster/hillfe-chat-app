@@ -70,7 +70,6 @@ export class Server {
     for (let i = 0;  i < this.rooms.length; i++) {
       if (this.rooms[i].roomname === request.newRoom.roomname) {
         this.rooms[i].usernames.push(request.username);
-        console.log(this.rooms);
         return this.rooms[i];
       }
     }
