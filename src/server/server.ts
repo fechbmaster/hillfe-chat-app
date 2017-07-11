@@ -5,6 +5,7 @@ import {SocketEvents} from "../client/app/models/socketEvents";
 import {DataHandler} from "./data.handler";
 import {Room} from "./room";
 import {JoinRoomRequest} from "../client/app/models/joinRoomRequest";
+import {Message} from "../client/app/models/message";
 /**
  * Created by Barni on 04.07.2017.
  */
@@ -53,6 +54,16 @@ export class Server {
     return room;
   }
 
+  private getRoomForUser(username: string): Room {
+    for (let room of this.rooms) {
+      for (let name of room.usernames ) {
+        if (name === username)
+          return room;
+      }
+    }
+    return null;
+  }
+
   // General-room can't be deleted! Only users can be synced...
   private addUserToRoom(request: JoinRoomRequest): Room {
     this.removeUser(request.username);
@@ -95,24 +106,29 @@ export class Server {
           // Emmit for old room
           this.io.to(request.oldRoom.roomname).emit(SocketEvents.ROOMCHANGED, this.getRoom(request.oldRoom));
           // Emmit for new room
-          this.io.to(request.newRoom.roomname).emit(SocketEvents.ROOMCHANGED, this.getRoom(request.newRoom));
-          // Send to room
-          socket.on(SocketEvents.MESSAGE, (msg) => {
-            console.log('Server emitted: ' + JSON.stringify(msg));
-            this.io.to(request.newRoom.roomname).emit(SocketEvents.MESSAGE, msg);
-          });
-          socket.on('disconnect', () => {
-            console.log('Registered-user disconnected');
-            // Emmit for new room
-            this.io.to(request.newRoom.roomname).emit(SocketEvents.ROOMCHANGED, this.getRoom(request.newRoom));
-          });
+          this.io.to(request.newRoom.roomname).emit(SocketEvents.ROOMCHANGED, this.getRoom(request.newRoom))
         }
+      });
+
+      socket.on(SocketEvents.MESSAGE, (msg) => {
+        console.log('Server emitted: ' + JSON.stringify(msg));
+        this.io.to(this.getRoomForUser(msg.username).roomname).emit(SocketEvents.MESSAGE, msg);
       });
 
       // Send only to id when login occurs
       socket.on(SocketEvents.LOGIN, (msg) => {
         console.log("Server emitted login for user: " + JSON.stringify(msg));
+        // Register user to room
         this.io.to(socket.id).emit(SocketEvents.LOGIN, this.dataHandler.checkForUser(msg));
+      });
+
+      socket.on(SocketEvents.LOGOUT, (msg) => {
+        console.log("Server emitted logout for user: " + JSON.stringify(msg));
+        // Clean rooms
+        let oldrooom: Room = this.getRoomForUser(msg);
+        this.removeUser(msg);
+        this.io.to(oldrooom.roomname).emit(SocketEvents.ROOMCHANGED, oldrooom);
+        this.dataHandler.saveRooms(this.rooms);
       });
     });
 

@@ -13,7 +13,7 @@ import {RoomComponent} from "./room/room.component";
 import {RoomService} from "./services/room.service";
 
 const appRoutes: Routes = [
-  {path: "", redirectTo: "chat", pathMatch: "full" },
+  {path: "", redirectTo: "/chat", pathMatch: "full" },
   {path: "login-page", component: LoginComponent},
   {path: "chat", component: ChatComponent},
 ];
@@ -28,7 +28,7 @@ const appRoutes: Routes = [
   imports: [
     RouterModule.forRoot(
       appRoutes,
-      {useHash: true, enableTracing: false}, // <--- debugging purposes only
+      {useHash: false, enableTracing: true}, // <--- debugging purposes only
     ),
     BrowserModule,
     FormsModule,

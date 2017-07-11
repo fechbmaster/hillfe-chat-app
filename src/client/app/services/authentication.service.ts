@@ -32,19 +32,20 @@ export class AuthenticationService {
   }
 
   public getCurrentUser(): User {
-    this.checkCredentials();
     return JSON.parse(localStorage.getItem("currentUser"));
   }
 
   public logout(): void {
-    // clear ser from local storage to log user out
+    // clear user from local storage to log user out
+    this.socketService.emit(SocketEvents.LOGOUT, this.getCurrentUser().username);
     localStorage.removeItem('currentUser');
-    this.router.navigate(["login-page"]).then();
+    this.router.navigate(['/login-page']);
   }
 
-  public checkCredentials(): void{
+  public checkCredentials(): boolean{
     if (localStorage.getItem("currentUser") === null){
-      this.router.navigate(["login-page"]).then();
+      return false;
     }
+    return true;
   }
 }

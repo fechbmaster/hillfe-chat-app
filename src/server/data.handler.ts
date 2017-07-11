@@ -30,7 +30,7 @@ export class DataHandler {
   }
 
   public saveRooms(rooms: Room[]) {
-    fs.writeFile('./src/server/rooms.json', JSON.stringify(rooms));
+    fs.writeFileSync('./src/server/rooms.json', JSON.stringify(rooms));
   }
 
 }

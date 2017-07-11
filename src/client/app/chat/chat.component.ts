@@ -1,13 +1,13 @@
 /**
  * Created by Barni on 07.07.2017.
  */
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {SocketService} from "../services/socket.service";
 import {Subscription} from "rxjs";
 import {AuthenticationService} from "../services/authentication.service";
 import {SocketEvents} from "../models/socketEvents";
 import {Message} from "../models/message";
-
+import {Router} from "@angular/router";
 @Component( {
   selector: "chat-component",
   templateUrl: "./chat.component.html",
@@ -15,14 +15,14 @@ import {Message} from "../models/message";
   providers: [SocketService]
 })
 export class ChatComponent implements OnInit, OnDestroy {
-
+  @ViewChild('chat_area') private chat_area: ElementRef;
   public messages: Message[] = [];
   private connection: Subscription;
   public message: string;
   public placeholderUrl = "../../assets/Person-placeholder.jpg";
   public timeStamp: string;
 
-  constructor(private chatService: SocketService, private authService: AuthenticationService) {}
+  constructor(private chatService: SocketService, private authService: AuthenticationService, private router: Router) {}
 
   private sendMessage(): void {
     // Send only when message is typed
@@ -42,8 +42,16 @@ export class ChatComponent implements OnInit, OnDestroy {
     return d.getHours()+":"+d.getMinutes();
   }
 
+  private scrollToBottom(): void {
+    try {
+      this.chat_area.nativeElement.scrollTop = this.chat_area.nativeElement.scrollHeight;
+    } catch(err) { }
+  }
+
   ngOnInit(): void {
-    this.authService.checkCredentials();
+    if(!this.authService.checkCredentials()) {
+      this.router.navigate(["login-page"]).then();
+    }
     this.connection = this.chatService.getResponse(SocketEvents.MESSAGE).subscribe(message => {
       this.timeStamp = ChatComponent.getTimeStamp();
       let msg: Message = message;
@@ -51,12 +59,13 @@ export class ChatComponent implements OnInit, OnDestroy {
         msg.own = true;
       }
       this.messages.push(msg);
+      this.scrollToBottom();
     })
   }
 
   ngOnDestroy(): void {
-    //todo: unsubscribe all others too
-    this.connection.unsubscribe();
+    if(this.connection)
+      this.connection.unsubscribe();
   }
 
 }

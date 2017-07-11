@@ -7,7 +7,7 @@
         <span class="caret pull-right"></span>
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-        <li><a *ngFor="let room of rooms" (click)="changeRoom(room)" href="#"> {{room.roomname}} </a></li>
+        <li><a *ngFor="let room of rooms" (click)="changeRoom(room)"> {{room.roomname}} </a></li>
       </ul>
     </div>
     <div class="member_list">

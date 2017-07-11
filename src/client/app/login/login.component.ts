@@ -13,6 +13,7 @@ import {Router} from "@angular/router";
   providers: [AuthenticationService]
 })
 export class LoginComponent {
+
   public user = new User('','');
   public errorMsg: string = '';
 
@@ -22,7 +23,7 @@ export class LoginComponent {
     this.authService.login(this.user).then((res) => {
         if (res == true) {
           localStorage.setItem('currentUser', JSON.stringify(this.user));
-          console.log("User successfully loged in.");
+          console.log("User successfully logged in.");
           // Wait for promise fulfillment
           this.router.navigate(["/chat"]).then();
         }
